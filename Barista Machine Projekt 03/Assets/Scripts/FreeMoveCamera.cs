@@ -59,6 +59,10 @@ public class FreeMoveCamera : MonoBehaviour
       move = Vector3.ClampMagnitude(move, moveSpeed); // Magnitude des Vektors begrenzen für richtige Geschwindigekeit
       move *= Time.deltaTime;
       cam.transform.Translate(move, Space.Self);
+      
+      //TODO
+      //Abfrage, wo Kamera ist und wieder ein bisschen zurück setzen
+      //cam.transform abfragen und um einen Wert zurücksetzen
   }
 
   private void ResetCamera()
