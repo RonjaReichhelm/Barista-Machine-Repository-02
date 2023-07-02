@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
@@ -8,6 +9,21 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI instructionLabel;
     [SerializeField] private TextMeshProUGUI helpLabel;
     [SerializeField] private TextMeshProUGUI errorLabel;
+    
+    // ErrorCounter
+    [SerializeField] private TextMeshProUGUI errorCountLabel;
+    private int errorCount;
+    
+    // helpCounter
+    [SerializeField] private TextMeshProUGUI helpCountLabel;
+    private int helpCount;
+    
+    // Endbildschirm
+    [SerializeField] private TextMeshProUGUI endErrorCountLabel;
+    private int endErrorCount;
+    [SerializeField] private TextMeshProUGUI endHelpCountLabel;
+    private int endHelpCount;
+    
     [SerializeField] private LayerMask layerMask;
     
     [SerializeField] private List<Interaction> interactions;
@@ -15,14 +31,26 @@ public class InteractionManager : MonoBehaviour
     private int interactionIndex;
     
     private Camera cam;
-
+    
+    private bool isHelpCountIncremented = false; //EinmaligHelp
+    private Coroutine displayCoroutine;
+    private bool coroutineRunning  = false;
+    
+    
     private void Awake() => cam = Camera.main;
 
     private void Start()
     {
         helpLabel.SetText("");
         errorLabel.SetText("");
-
+        
+        errorCountLabel.SetText("Errors: " + errorCount); // ErrorCounter
+        helpCountLabel.SetText("Help Requests: " + helpCount); // helpCounter
+        
+        // Endbildschirm
+        errorCountLabel.SetText("Errors: " + endErrorCount); 
+        helpCountLabel.SetText("Help Requests: " + endHelpCount);
+        
         currentInteraction = interactions[interactionIndex];
         instructionLabel.SetText(currentInteraction.Instruction);
     }
@@ -43,10 +71,27 @@ public class InteractionManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.H))
-        {
-            // helpCount++
+        { 
+         
+            
+            //Einmalig HelpCount
+            if (!isHelpCountIncremented) 
+            {
+                helpCount++;
+                endHelpCount++;
+                helpCountLabel.SetText("Help Requests: " + helpCount); // helpCounter
+                endHelpCountLabel.SetText("Help Requests: " + helpCount); // Endbildschirm
+                isHelpCountIncremented = true;
+            }
+            
+            helpCountLabel.SetText("Help Requests: " + helpCount); // HelpCounter
+            endHelpCountLabel.SetText("Help Requests: " + helpCount); // Endbildschirm
+            
             StopHelpAndErrorDisplay();
-            StartCoroutine(DisplayForDuration(helpLabel, currentInteraction.HelpMsg, 5.0f));
+            if (!coroutineRunning)
+            {
+                StartCoroutine(DisplayForDuration(helpLabel, currentInteraction.HelpMsg, 3.0f));
+            }
         }
     }
 
@@ -66,7 +111,15 @@ public class InteractionManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(DisplayForDuration(errorLabel, currentInteraction.ErrorMsg, 7.0f));
+            errorCount++; // ErrorCounter
+            errorCountLabel.SetText("Errors: " + errorCount);
+            
+            // Endbildschirm
+            endErrorCount++; 
+            endErrorCountLabel.SetText("Errors: " + endErrorCount);
+
+            StartCoroutine(DisplayErrorForDuration(errorLabel, currentInteraction.ErrorMsg, 3.0f));
+
         }
     }
 
@@ -91,11 +144,28 @@ public class InteractionManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisplayForDuration(TextMeshProUGUI label, string msg, float duration)
     {
+
+        label.text = msg;
+        yield return new WaitForSeconds(duration);
+        helpCountLabel.SetText("Help Requests: " + helpCount); // helpCounter
+        endHelpCountLabel.SetText("Help Requests: " + helpCount); // Endbildschirm
+        label.text = "";
+
+        isHelpCountIncremented = false;
+        coroutineRunning = false;
+    }
+    
+    private IEnumerator DisplayErrorForDuration(TextMeshProUGUI label, string msg, float duration)
+    {
         label.text = msg;
         yield return new WaitForSeconds(duration);
         label.text = "";
     }
-
+    
+    private IEnumerator increaseForDuration(TextMeshProUGUI label, string msg, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+    }
     private void StopHelpAndErrorDisplay()
     {
         StopAllCoroutines();

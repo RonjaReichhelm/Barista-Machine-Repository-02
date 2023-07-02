@@ -49,10 +49,11 @@ private PlayerControls playerControls; // Eine private Variable vom Typ PlayerCo
     {
         return playerControls.Player.Look.ReadValue<Vector2>(); // Gibt den Wert der Eingabesteuerung "Look" des "playerControls.Player"-Objekts als Vector2 zurück.
     }
-
+    
     public bool PlayerJumpedThisFrame()
     {
         return playerControls.Player.Jump.triggered;
     }
+
     
 }

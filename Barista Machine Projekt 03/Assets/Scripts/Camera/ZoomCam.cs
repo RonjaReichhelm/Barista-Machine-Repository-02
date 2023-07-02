@@ -23,7 +23,7 @@ public class ZoomCam : MonoBehaviour
         //  m_Lens = GetComponent<LensSettings>();
 
         m_Camera = GetComponent<CinemachineVirtualCamera>();
-        m_Camera.m_Lens.FieldOfView = 100;
+        m_Camera.m_Lens.FieldOfView = 70;
         
     }
 

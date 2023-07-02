@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         //Timecode: 09:00
         if (inputManager.PlayerJumpedThisFrame() && groundedPlayer)
         {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+           // playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
