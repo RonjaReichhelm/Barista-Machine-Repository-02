@@ -72,7 +72,6 @@ public class InteractionManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H))
         { 
-         
             
             //Einmalig HelpCount
             if (!isHelpCountIncremented) 
