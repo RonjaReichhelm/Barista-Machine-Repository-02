@@ -1573,7 +1573,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4560180276995933755}
   m_Layer: 0
-  m_Name: cafe1_fbx
+  m_Name: cafe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
